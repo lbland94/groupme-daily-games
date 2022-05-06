@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json.schemastore.org/stylelintrc.json",
+  "extends": ["stylelint-config-standard-scss", "stylelint-prettier/recommended"],
+  "plugins": ["stylelint-prettier"],
+  "rules": {
+    "prettier/prettier": true,
+    "scss/at-import-partial-extension": null,
+    "no-descending-specificity": null,
+    "no-invalid-position-at-import-rule": null,
+    "scss/dollar-variable-pattern": "([a-z]+(-|_)?)+",
+    "scss/at-mixin-pattern": "[a-z]+(([A-Z]([a-z]+)?)+)|([a-z]+(-|_)?)+",
+    "scss/at-function-pattern": "[a-z]+(([A-Z]([a-z]+)?)+)|([a-z]+(-|_)?)+",
+    "selector-class-pattern": "[a-z]+(([A-Z]([a-z]+)?)+)|([a-z]+(-|_)?)+",
+    "keyframes-name-pattern": "[a-z]+(([A-Z]([a-z]+)?)+)|([a-z]+(-|_)?)+",
+    "block-no-empty": null,
+    "scss/at-extend-no-missing-placeholder": null,
+    "number-max-precision": null,
+    "color-function-notation": null,
+    "selector-no-vendor-prefix": null,
+    "media-feature-name-no-vendor-prefix": null,
+    "property-no-vendor-prefix": null,
+    "value-no-vendor-prefix": null,
+    "no-empty-source": null,
+    "media-feature-name-no-unknown": [true, {
+      "ignoreMediaFeatureNames": [
+        "/min-.*?device-pixel-ratio/"
+      ]
+    }]
+  },
+  "overrides": [{
+    "files": ["src/**/*.vue", "src/**/*.scss"],
+    "customSyntax": "postcss-html"
+  }]
+}

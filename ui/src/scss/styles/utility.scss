@@ -1,0 +1,29 @@
+.hover--brighten {
+  transition: filter animtime(0.5s) ease-in-out;
+  &:hover {
+    filter: brightness(105%);
+  }
+}
+
+.cursor--pointer {
+  cursor: pointer;
+}
+
+.faded {
+  opacity: 0.6;
+}
+
+.absolute-center {
+  position: absolute !important;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.relative {
+  position: relative;
+}
+
+.absolute {
+  position: absolute;
+}

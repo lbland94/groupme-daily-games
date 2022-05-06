@@ -1,0 +1,14 @@
+@import './_globalIncludes';
+@import './icons.scss';
+@import './styles/styles.scss';
+
+:root {
+  font-size: $base-font-size;
+  font-family: $gdg-font-sans;
+  @include gdg-color-vars();
+  @include gdg-color-vars-variants();
+
+  --gdg-hover-brightness: 90%;
+  --gdg-border-radius: 8px;
+  --gdg-animation-speed: #{$gdg-animation-speed};
+}

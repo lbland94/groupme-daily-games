@@ -1,0 +1,33 @@
+version: '3'
+
+services:
+  groupme-daily-games-ui:
+    build:
+      context: ./ui
+      dockerfile: ./docker/node/Dockerfile
+    image: groupme-daily-games-ui
+    container_name: groupme-daily-games-ui
+    restart: unless-stopped
+    ports:
+      - ${UI_PORT}:80
+  groupme-daily-games-api:
+    build:
+      context: ./api
+      dockerfile: ./docker/node/Dockerfile
+    image: groupme-daily-games-api
+    container_name: groupme-daily-games-api
+    restart: unless-stopped
+    ports:
+      - ${PORT}:${PORT}
+    environment:
+      - APP
+      - PORT
+      - HOSTNAME
+      - DB_DIALECT
+      - DB_HOST
+      - DB_PORT
+      - DB_NAME
+      - DB_USER
+      - DB_PASSWORD
+      - GROUPME_ACCESS_TOKEN
+      - GROUPME_GROUP_NAME

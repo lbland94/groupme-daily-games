@@ -1,0 +1,16 @@
+version: '3'
+
+services:
+  groupme-daily-games-ui:
+    build:
+      context: ../
+      dockerfile: ./docker/node/Dockerfile
+      args:
+        PORT: ${PORT}
+    image: groupme-daily-games-ui
+    container_name: groupme-daily-games-ui
+    restart: unless-stopped
+    ports:
+      - ${PORT}:80
+    environment:
+      - PORT

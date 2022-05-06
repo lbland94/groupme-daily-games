@@ -1,0 +1,48 @@
+@use "sass:map";
+@use "sass:color";
+
+$gdg-colors: (
+  background: #2a2a2a,
+  font: #ffffff,
+  'white': #ffffff,
+  'black': #000000,
+);
+
+@function gdg-color($keys...) {
+  $value: $gdg-colors;
+
+  @each $key in $keys {
+    $value: map-get($value, $key);
+  }
+
+  @return $value;
+}
+
+@mixin gdg-color-vars() {
+  @each $name, $color in $gdg-colors {
+    --gdg-color-#{$name}: #{$color};
+  }
+}
+
+@mixin gdg-color-vars-variants() {
+  // Only want to generate light and dark variants of certain included colors
+  $gdg-colors-variants: map.remove(
+    $gdg-colors,
+    disabled,
+    border,
+    font-dark,
+    font-medium,
+    font,
+    icon-dark,
+    icon,
+    bg-blue,
+    bg-yellow,
+    bg-green,
+  );
+  @each $name, $color in $gdg-colors-variants {
+    @for $i from 1 through 10 {
+      --gdg-color-#{$name}--lighten-#{$i * 5}: #{color.adjust($color, $lightness: $i * 5%)};
+      --gdg-color-#{$name}--darken-#{$i * 5}: #{color.adjust($color, $lightness: $i * -5%)};
+    }
+  }
+}

@@ -1,0 +1,40 @@
+input, textarea, select, form, button {
+  border: none;
+  margin: 0;
+  padding: 0;
+  font: inherit;
+  line-height: 1em;
+  display: inline-block;
+  vertical-align: middle;
+  align-items: center;
+  white-space: normal;
+  color: inherit;
+  @include active-state {
+    outline: none;
+  }
+}
+
+* {
+  @include active-state {
+    outline: none;
+  }
+}
+
+.clear-btn {
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+}
+
+.underline {
+  text-decoration: underline;
+}
+
+.keyboard-focus {
+  &:focus, &:focus-within {
+    outline: 2px solid #7aacfe !important;
+    outline: 5px auto -webkit-focus-ring-color !important;
+  }
+}

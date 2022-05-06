@@ -1,0 +1,22 @@
+@use "sass:map";
+
+$gdg-colors-bg: map.remove(
+  $gdg-colors,
+  primary,
+  secondary,
+  background,
+  icon,
+  icon-dark,
+  font,
+  font-dark,
+  border,
+  disabled,
+  'white',
+  'black',
+);
+
+@each $name, $color in $gdg-colors-bg {
+  .gdg-color-#{$name} {
+    background-color: #{$color};
+  }
+}

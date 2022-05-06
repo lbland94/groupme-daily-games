@@ -1,0 +1,12 @@
+{
+  "name": "groupme-daily-games-docker",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "docker:up": "COMPOSE_PROJECT_NAME=groupme-daily-games docker compose --file ./docker-compose.yml --env-file .env up -d --build",
+    "docker:down": "COMPOSE_PROJECT_NAME=groupme-daily-games docker compose --file ./docker-compose.yml --env-file .env down"
+  },
+  "author": "",
+  "license": "ISC"
+}

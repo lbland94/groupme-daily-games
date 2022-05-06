@@ -1,0 +1,210 @@
+@use 'sass:list';
+
+@mixin active-state($excludesHover: false) {
+  @if $excludesHover == true {
+    &:focus, &:active, &.active {
+      @content;
+    }
+  } @else {
+    &:hover, &:focus, &:active, &.active {
+      @content;
+    }
+  }
+}
+
+@function animtime($time) {
+  @return calc(#{$time} / var(--gdg-animation-speed));
+}
+
+/*
+ * Helper function for the mixins; unusued externally.
+ */
+@function search_screens($search) {
+  $screenKeys: map-keys($screens);
+  $previous: null;
+  $current: null;
+  $next: null;
+
+  @for $i from 1 through length($screens) {
+    $iterationKey: nth($screenKeys, $i);
+    $iterationSize: map-get($screens, $iterationKey);
+
+    @if ($current != null and $next == null) {
+      $next: $iterationSize;
+    }
+
+    @if ($iterationKey == $search or $iterationSize == $search) {
+      $current: $iterationSize;
+    }
+
+    @if ($current == null) {
+      $previous: $iterationSize;
+    }
+  }
+
+  @return (
+  'previous': $previous,
+  'current': $current,
+  'next': $next
+  );
+}
+/*
+ * Mixin to generate media queries for screen sizes smaller than the specified target.
+ * The first parameter is a string representing a screen size (defined in an array
+ * at the bottom of this file).
+ *
+ * Usage:
+ *   @include media-smaller($grid-sm) {...}
+ *   @include media-smaller('sm') {...}
+ */
+@mixin media-smaller($screen) {
+  $size: map-get(search_screens($screen), 'current');
+
+  @if ($size == null) {
+    $size: $screen;
+  }
+
+  @if ($size != null) {
+    @media all and (max-width: $size) { @content; }
+  }
+}
+
+/*
+ * Mixin to generate media queries for screen sizes the same as the specified target.
+ * The first parameter is a string representing a screen size (defined in an array
+ * at the bottom of this file).
+ * 
+ * Usage:
+ *   @include media-only($grid-sm) {...}
+ *   @include media-only('sm') {...}
+ */
+@mixin media-only($screen) {
+  $search: search_screens($screen);
+  $previous: map-get($search, 'previous');
+  $current: map-get($search, 'current');
+  $next: map-get($search, 'next');
+
+  @if ($previous != null and $current != null) {
+    @media all and (min-width: $previous) and (max-width: $current) { @content; }
+  } @else if ($current != null) {
+    @media all and (max-width: $current) { @content; }
+  }
+}
+
+/*
+ * Mixin to generate media queries between grid values and other values, or between
+ * two grid values (though media-only is preferred for that use-case)
+ * 
+ * Usage:
+ *   @include media-between(100px, $grid-sm) {...}
+ *   @include media-between(100px, 'sm') {...}
+ */
+@mixin media-between($lower, $upper: null) {
+  $searchLow: search_screens($lower);
+  $searchHigh: search_screens($upper);
+  $low: map-get($searchLow, 'current');
+  $high: map-get($searchHigh, 'current');
+
+  @if ($low == null) {
+    $low: $lower;
+  }
+  @if ($high == null) {
+    $high: $upper;
+  }
+
+  @if ($low != null and $high != null) {
+    @media all and (min-width: $low) and (max-width: $high) { @content; }
+  } @else if ($low != null) {
+    @media all and (min-width: $low) { @content; }
+  } @else if ($high != null) {
+    @media all and (max-width: $high) { @content; }
+  }
+}
+
+/*
+ * Mixin to generate media queries for screen sizes larger than the specified target.
+ * The first parameter is a string representing a screen size (defined in an array
+ * at the bottom of this file).
+ * 
+ * Usage:
+ *   @include media-larger($grid-sm) {...}
+ *   @include media-larger('sm') {...}
+ */
+@mixin media-larger($screen) {
+  $size: map-get(search_screens($screen), 'current');
+
+  @if ($size == null) {
+    $size: $screen;
+  }
+
+  @if ($size != null) {
+    @media all and (min-width: $size) { @content; }
+  }
+}
+
+$grid-lg: 1600px;
+$grid-sm: 1200px;
+$grid-xs: 600px;
+$screens: (
+  'xs': $grid-xs,
+  'sm': $grid-sm,
+  'lg': $grid-lg
+);
+
+@function slice($list, $start: 1, $end: list.length($list)) {
+  $result: ();
+
+  @if ($end < 0) {
+    $end: list.length($list) + $end;
+  }
+
+  @for $i from $start through $end {
+    $result: append($result, nth($list, $i));
+  }
+
+  @return $result;
+}
+
+@function transition($args...) {
+  $props: slice($args, 1, -2);
+  $time: animtime(list.nth($args, -2));
+  $ease: list.nth($args, -1);
+
+  $transition: ();
+  @each $prop in $props {
+    $transition: list.append($transition, ($prop $time $ease), $separator: comma);
+  }
+
+  @return $transition;
+}
+
+@mixin webkit-only() {
+  @supports (not (-moz-appearance: none)) {
+    @content;
+  }
+}
+
+@mixin gecko-only() {
+  @supports (-moz-appearance: none) {
+    @content;
+  }
+}
+
+@mixin ios-only() {
+  @supports (-webkit-touch-callout: none) {
+    @content;
+  }
+}
+
+@mixin media-short() {
+  @media (orientation: landscape) and (max-height: 750px) {
+    @content;
+  }
+}
+
+@mixin position($top, $right: $top, $bottom: $top, $left: $right) {
+  top: $top;
+  right: $right;
+  bottom: $bottom;
+  left: $left;
+}
