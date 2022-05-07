@@ -1,5 +1,5 @@
 <template>
-  <div class="gdg-score flex col justify-c">
+  <div class="gdg-score flex col">
     <div class="flex row gdg-s-h">
       <div class="gdg-s-user">
         {{ score?.user }}
