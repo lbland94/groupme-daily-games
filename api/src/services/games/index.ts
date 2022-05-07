@@ -28,7 +28,7 @@ function applyTypes<T extends Record<string, (...args: any[]) => any>>(match: Re
 
 export class GamesService {
   public static parseGames(inputs: Array<{ user: string; msg: string; timestamp: number }>, date?: string) {
-    const day = date ? dayjs.tz(date, 'YYYY-MM-DD', DEF_TZ) : dayjs().tz(DEF_TZ).startOf('day');
+    const day = date ? dayjs.tz(date, 'YYYY-MM-DD', DEF_TZ) : dayjs().tz(DEF_TZ, true).startOf('day');
     const scores: Score[] = [];
     const gameMinMax = this.allMinMax(day);
     for (const input of inputs) {

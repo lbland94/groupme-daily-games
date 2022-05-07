@@ -9,9 +9,9 @@ import httpStatus from 'http-status';
 export default class ScoreboardController {
   public async getDay(req: Request<any, any, any, FetchScoreboardRequest['query']>, res: Response) {
     try {
-      let date = dayjs().tz(DEF_TZ);
+      let date = dayjs().tz(DEF_TZ, true);
       if (req.query.date) {
-        date = dayjs(req.query.date, 'YYYY-MM-DD').tz(DEF_TZ);
+        date = dayjs.tz(req.query.date, 'YYYY-MM-DD', DEF_TZ);
       }
 
       const minMax = GamesService.minMaxResetTime(date.format('YYYY-MM-DD'));
