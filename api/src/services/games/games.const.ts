@@ -1,4 +1,4 @@
-import dayjs from '@/utilities/dayjs';
+import dayjs, { DEF_TZ } from '@/utilities/dayjs';
 
 export const GAMES = [
   {
@@ -12,7 +12,7 @@ export const GAMES = [
     },
     example: 'Wordle 317 3/6\n\n🟩🟩⬜🟩⬜\n🟩🟩🟩🟩⬜\n🟩🟩🟩🟩🟩',
     url: 'https://www.nytimes.com/games/wordle/index.html',
-    utcResetOffset: dayjs().utcOffset(),
+    utcResetOffset: dayjs().tz(DEF_TZ).utcOffset(),
   },
   {
     name: 'octordle',
@@ -35,7 +35,7 @@ export const GAMES = [
     },
     example: 'Daily Octordle #99\n🔟6️⃣\n🕛7️⃣\n9️⃣🕚\n8️⃣🕐',
     url: 'https://octordle.com/',
-    utcResetOffset: dayjs().utcOffset(),
+    utcResetOffset: dayjs().tz(DEF_TZ).utcOffset(),
   },
   {
     name: 'nerdlegame',
@@ -83,7 +83,7 @@ export const GAMES = [
     regex:
       /🌎 (?<date>\w+ \d+, \d+) 🌍(?:\s|\n)🔥 (?<streak>\d+) \| Avg\. Guesses: (?<average>(?:\d|\.)+)\n(?<emoji>(?:⬜|🟨|🟧|🟥|🟩|\n)+) = (?<score>\d+)/,
     regexTypes: {
-      date: (d: string) => dayjs(d, 'MMM D, YYYY').format(),
+      date: (d: string) => dayjs.tz(d, 'MMM D, YYYY', DEF_TZ).format(),
       streak: Number,
       average: Number,
       emoji: (e: string) => e?.replace('\n', ''),
@@ -91,7 +91,7 @@ export const GAMES = [
     },
     example: '🌎 May 2, 2022 🌍\n🔥 1 | Avg. Guesses: 12\n⬜⬜🟨🟨🟧🟨🟧🟨\n🟧🟥⬜🟩 = 12',
     url: 'https://globle-game.com',
-    utcResetOffset: dayjs().utcOffset(),
+    utcResetOffset: dayjs().tz(DEF_TZ).utcOffset(),
   },
   {
     name: 'semantle',

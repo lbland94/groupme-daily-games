@@ -1,4 +1,4 @@
-import dayjs from '@/utilities/dayjs';
+import dayjs, { DEF_TZ } from '@/utilities/dayjs';
 import { GAMES } from './games.const';
 import { Score } from './games.interface';
 
@@ -28,7 +28,7 @@ function applyTypes<T extends Record<string, (...args: any[]) => any>>(match: Re
 
 export class GamesService {
   public static parseGames(inputs: Array<{ user: string; msg: string; timestamp: number }>, date?: string) {
-    const day = date ? dayjs(date, 'YYYY-MM-DD') : dayjs().startOf('day');
+    const day = date ? dayjs.tz(date, 'YYYY-MM-DD', DEF_TZ) : dayjs().tz(DEF_TZ).startOf('day');
     const scores: Score[] = [];
     const gameMinMax = this.allMinMax(day);
     for (const input of inputs) {
@@ -39,13 +39,6 @@ export class GamesService {
         if (game.regex.test(input.msg)) {
           const match = game.regex.exec(input.msg);
           if (min && max) {
-            // console.log(
-            //   'name',
-            //   game.name,
-            //   min.unix() > input.timestamp,
-            //   max.unix() < input.timestamp,
-            //   dayjs.unix(input.timestamp).format(),
-            // );
             if (min.unix() > input.timestamp || max.unix() < input.timestamp) continue;
           }
           const data = applyTypes(match, game.regexTypes);
@@ -77,7 +70,7 @@ export class GamesService {
         max = g.utcResetOffset;
       }
     });
-    const day = dayjs(date, 'YYYY-MM-DD');
+    const day = dayjs.tz(date, 'YYYY-MM-DD', DEF_TZ);
     const endTime = day.clone().add(max, 'minutes').add(1, 'day');
     const startTime = day.clone().add(min, 'minutes');
 

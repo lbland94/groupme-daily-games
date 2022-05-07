@@ -28,8 +28,6 @@ export class GroupmeService {
   }
 
   public static async fetchRange(startTime: dayjs.Dayjs, endTime: dayjs.Dayjs) {
-    console.log('start', startTime.format());
-    console.log('end', endTime.format());
     try {
       if (!(await this.initialized)) {
         await this.initialize();
@@ -39,10 +37,6 @@ export class GroupmeService {
       while (messages[0]?.createdAt > startTime.unix()) {
         messages.unshift(...(await this.group.messages.fetch({ limit, before_id: messages[0].id })).array());
       }
-      console.log(
-        'messages',
-        messages.filter((m) => m.createdAt > startTime.unix() && m.createdAt < endTime.unix()).map((m) => m.text),
-      );
       return messages.filter((m) => m.createdAt > startTime.unix() && m.createdAt < endTime.unix());
     } catch (e) {
       console.error(e);
