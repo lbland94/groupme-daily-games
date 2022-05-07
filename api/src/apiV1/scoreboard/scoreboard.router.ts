@@ -11,14 +11,8 @@ export const scoreboardController = new Controller();
 scoreboardRouter.get(
   '',
   validate(FetchScoreboardRequest),
-  routeCache.cacheSeconds(86400 / 4, (req: Request, res: Response) => {
-    if (!req.query?.date) {
-      return false;
-    }
-    return req.originalUrl;
-  }),
-  routeCache.cacheSeconds(30, (req: Request, res: Response) => {
-    if (req.query?.date) {
+  routeCache.cacheSeconds(200, (req: Request, res: Response) => {
+    if (!req.query?.date || req.query?.forceRefresh === 'true') {
       return false;
     }
     return req.originalUrl;

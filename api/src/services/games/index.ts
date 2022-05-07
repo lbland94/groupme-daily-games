@@ -2,6 +2,18 @@ import dayjs from '@/utilities/dayjs';
 import { GAMES } from './games.const';
 import { Score } from './games.interface';
 
+function applyAdditionalProps(addProps: Record<string, (...args: any[]) => string | number | boolean>, data: any) {
+  const output: Record<string, string | number | boolean> = {};
+  for (const key in addProps) {
+    try {
+      output[key] = addProps[key](data);
+    } catch (e) {
+      //
+    }
+  }
+  return output;
+}
+
 function applyTypes<T extends Record<string, (...args: any[]) => any>>(match: RegExpExecArray, types: T) {
   const typedOutput: Partial<Record<keyof T, ReturnType<T[keyof T]> | string>> = {};
   for (const key in match.groups || {}) {
@@ -27,11 +39,22 @@ export class GamesService {
         if (game.regex.test(input.msg)) {
           const match = game.regex.exec(input.msg);
           if (min && max) {
+            // console.log(
+            //   'name',
+            //   game.name,
+            //   min.unix() > input.timestamp,
+            //   max.unix() < input.timestamp,
+            //   dayjs.unix(input.timestamp).format(),
+            // );
             if (min.unix() > input.timestamp || max.unix() < input.timestamp) continue;
           }
+          const data = applyTypes(match, game.regexTypes);
           scores.push({
             game: game.name,
-            info: applyTypes(match, game.regexTypes),
+            info: {
+              ...data,
+              ...applyAdditionalProps(game.additionalProps, data),
+            },
             source: input.msg,
             user: input.user,
             timestamp: input.timestamp,
@@ -54,7 +77,7 @@ export class GamesService {
         max = g.utcResetOffset;
       }
     });
-    const day = dayjs.utc(date, 'YYYY-MM-DD');
+    const day = dayjs(date, 'YYYY-MM-DD');
     const endTime = day.clone().add(max, 'minutes').add(1, 'day');
     const startTime = day.clone().add(min, 'minutes');
 

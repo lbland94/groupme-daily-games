@@ -5,6 +5,7 @@ export const FetchScoreboardRequest: schema = {
     date: Joi.string()
       .optional()
       .regex(/\d{4}-\d{2}-\d{2}/),
+    forceRefresh: Joi.string().optional(),
   }),
 };
 

@@ -15,6 +15,29 @@ export const GAMES = [
     utcResetOffset: dayjs().utcOffset(),
   },
   {
+    name: 'octordle',
+    regex: /Daily Octordle #(?<number>\d+)\n\n?(?<emoji>(?:(?:0️⃣|1️⃣|2️⃣|3️⃣|4️⃣|5️⃣|6️⃣|7️⃣|8️⃣|9️⃣|🔟|🕚|🕛|🕐|🟥)\n?){8})/,
+    regexTypes: {
+      number: Number,
+      emoji: String,
+    },
+    additionalProps: {
+      score: ({ number, emoji }: { number: number; emoji: string }) => {
+        if (emoji.includes('🟥')) return 'unsolved';
+        if (emoji.includes('🕐')) return 13;
+        if (emoji.includes('🕛')) return 12;
+        if (emoji.includes('🕚')) return 11;
+        if (emoji.includes('🔟')) return 10;
+        if (emoji.includes('9️⃣')) return 9;
+        if (emoji.includes('8️⃣')) return 8;
+        return '?';
+      },
+    },
+    example: 'Daily Octordle #99\n🔟6️⃣\n🕛7️⃣\n9️⃣🕚\n8️⃣🕐',
+    url: 'https://octordle.com/',
+    utcResetOffset: dayjs().utcOffset(),
+  },
+  {
     name: 'nerdlegame',
     regex: /nerdlegame (?<number>\d+) (?<score>\d)\/6\n?\n(?<emoji>(?:(?:(?:🟩|🟪|⬛){8})\n){0,5}(?:(?:🟩|🟪|⬛){8}))/,
     regexTypes: {
