@@ -1,0 +1,24 @@
+name: build-and-push-api
+on:
+  push:
+    tags:
+      - release/api-*
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Get tag
+        uses: dawidd6/action-get-tag@v1.1.0
+        id: tag
+      - name: Set env
+        run: echo "RELEASE_VERSION=${{steps.tag.outputs.tag}}" | sed 's/release\/api-//g' >> $GITHUB_ENV
+      - name: Build and push Docker images
+        uses: docker/build-push-action@v3.0.0
+        with:
+          context: ./api
+          file: ./api/docker/node/Dockerfile
+          push: true
+          tags: |
+            registry.docker.bland.work:443/daily-games-api:${{ env.RELEASE_VERSION }}

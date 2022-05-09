@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "docker:up": "COMPOSE_PROJECT_NAME=groupme-daily-games docker compose --file ./docker-compose.yml --env-file .env up -d --build",
-    "docker:down": "COMPOSE_PROJECT_NAME=groupme-daily-games docker compose --file ./docker-compose.yml --env-file .env down"
+    "docker:down": "COMPOSE_PROJECT_NAME=groupme-daily-games docker compose --file ./docker-compose.yml --env-file .env down",
+    "act:api": "echo \"do not run this without setting push: false in the workflow\" && echo act -e .github/.act/api-push-tag-event.json -W .github/workflows/build-api-task.yml",
+    "act:ui": "echo \"do not run this without setting push: false in the workflow\" && echo act -e .github/.act/ui-push-tag-event.json -W .github/workflows/build-ui-task.yml"
   },
   "author": "",
   "license": "ISC"
