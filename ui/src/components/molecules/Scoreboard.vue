@@ -35,6 +35,7 @@ function transformScoreInfo(info: Score['info']) {
     switch (key) {
       case 'emoji':
       case 'date':
+      case 'number':
         break;
       case 'score':
         if (isNaN(Number(info[tKey]))) {
@@ -48,6 +49,13 @@ function transformScoreInfo(info: Score['info']) {
         obj[tKey] = { value: `${d.asSeconds()}s`, sortVal: d.asMilliseconds() };
         break;
       }
+      case 'hardMode':
+        if (info[tKey]) {
+          obj[tKey] = { value: '✅', sortVal: 0 };
+        } else {
+          obj[tKey] = { value: '❎', sortVal: 1 };
+        }
+        break;
       case 'hints':
         obj[tKey] = { value: info[tKey] ? info[tKey] : 0 };
         break;
