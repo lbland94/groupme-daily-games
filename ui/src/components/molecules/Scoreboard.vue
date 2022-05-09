@@ -36,6 +36,13 @@ function transformScoreInfo(info: Score['info']) {
       case 'emoji':
       case 'date':
         break;
+      case 'score':
+        if (isNaN(Number(info[tKey]))) {
+          obj[tKey] = { value: info[tKey], sortVal: Infinity };
+        } else {
+          obj[tKey] = { value: info[tKey], sortVal: info[tKey] };
+        }
+        break;
       case 'time': {
         const d = dayjs.duration({ milliseconds: info[tKey] });
         obj[tKey] = { value: `${d.asSeconds()}s`, sortVal: d.asMilliseconds() };

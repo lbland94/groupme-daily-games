@@ -12,10 +12,14 @@ scoreboardRouter.get(
   '',
   validate(FetchScoreboardRequest),
   routeCache.cacheSeconds(200, (req: Request, res: Response) => {
-    if (!req.query?.date || req.query?.forceRefresh === 'true') {
-      return false;
+    let key = req.path;
+    if (req.query?.date) {
+      key = `${key}?date=${req.query.date}`;
     }
-    return req.originalUrl;
+    if (req.query?.forceRefresh === 'true') {
+      routeCache.removeCache(key);
+    }
+    return key;
   }),
   scoreboardController.getDay,
 );

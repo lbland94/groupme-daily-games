@@ -1,20 +1,35 @@
 <template>
   <div class="gdg-home">
     <div class="flex row align-c gdg-h-header">
-      <button class="gdg-h-prev clear-btn" v-if="!first" @click.prevent="selectDate(-1)">
+      <button
+        class="gdg-h-prev clear-btn"
+        :disabled="first"
+        @click.prevent="selectDate(-1)"
+      >
         <Icon name="chevron_left" />
       </button>
-      <span v-else />
       <h2 class="gdg-s-title">{{ dateDisplay }}</h2>
-      <button class="gdg-h-next clear-btn" v-if="!last" @click.prevent="selectDate(1)">
-        <Icon name="chevron_right" />
-      </button>
-      <span v-else />
+      <div class="flex row">
+        <button
+          v-if="last || date.isSame(today, 'day')"
+          class="gdg-h-refresh clear-btn"
+          @click.prevent="fetchScoreboard(true)"
+        >
+          <Icon name="refresh" />
+        </button>
+        <button
+          class="gdg-h-next clear-btn"
+          :disabled="last"
+          @click.prevent="selectDate(1)"
+        >
+          <Icon name="chevron_right" />
+        </button>
+      </div>
     </div>
     <Scoreboard
       class="relative"
       :game="selectedGame"
-      :first="gameIndex === 0"
+      :first="gameIndex <= 0"
       :last="gameIndex === games?.length - 1"
       :scores="selectedGameScoreboard"
       @next="selectOtherGame(1)"
@@ -36,11 +51,8 @@ import Spinner from '@/components/atoms/Spinner.vue';
 export default defineComponent({
   name: 'GdgHome',
   components: { Scoreboard, Icon, Spinner },
-  async mounted() {
-    await this.store.dispatch(
-      'fetchScoreboard',
-      (this.$route.query?.date as string | undefined) || this.date.format('YYYY-MM-DD')
-    );
+  mounted() {
+    this.fetchScoreboard();
   },
   data: () => ({
     today: dayjs().startOf('day'),
@@ -56,6 +68,14 @@ export default defineComponent({
     },
     selectOtherGame(offset: number) {
       this.store.dispatch('selectOtherGame', offset);
+    },
+    async fetchScoreboard(forceRefresh?: boolean) {
+      await this.store.dispatch('fetchScoreboard', {
+        date:
+          (this.$route.query?.date as string | undefined) ||
+          this.date.format('YYYY-MM-DD'),
+        forceRefresh,
+      });
     },
   },
   computed: {
@@ -116,8 +136,14 @@ export default defineComponent({
   }
 
   .gdg-h-prev,
-  .gdg-h-next {
+  .gdg-h-next,
+  .gdg-h-refresh {
     font-size: 2rem;
+
+    &:disabled {
+      color: var(--gdg-color-white--darken-40);
+      cursor: not-allowed;
+    }
   }
 }
 </style>

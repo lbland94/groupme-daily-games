@@ -4,10 +4,16 @@ export const GAMES = [
   {
     name: 'Wordle',
     regex:
-      /Wordle (?<number>\d+) (?<score>\d)\/6\n?\n(?<emoji>(?:(?:(?:🟩|⬜|🟨|⬛){5})\n){0,5}(?:(?:🟩|⬜|🟨|⬛){5}))/,
+      /Wordle (?<number>\d+) (?<score>\d|X)\/6\n?\n(?<emoji>(?:(?:(?:🟩|⬜|🟨|⬛){5})\n){0,5}(?:(?:🟩|⬜|🟨|⬛){5}))/,
     regexTypes: {
       number: Number,
-      score: Number,
+      score: (score: string) => {
+        const numberScore = Number(score);
+        if (!isNaN(numberScore)) {
+          return numberScore;
+        }
+        return score;
+      },
       emoji: String,
     },
     example: 'Wordle 317 3/6\n\n🟩🟩⬜🟩⬜\n🟩🟩🟩🟩⬜\n🟩🟩🟩🟩🟩',
@@ -96,7 +102,7 @@ export const GAMES = [
   {
     name: 'semantle',
     regex:
-      /I solved Semantle #(?<number>\d+) in (?<score>\d+) guesses(?: with (?<hints>\d+) hints)?\. My first guess had a similarity of (?:(?:\d|\.|-)*\d). My first word in the top 1000 was at guess #(?:\d+)\. (?:My penultimate guess had a similarity of (?:(?:\d|\.|-)*\d)(?: \(\d+\/1000\))?\.)?/,
+      /I solved Semantle #(?<number>\d+) in (?<score>\d+) guesses(?: with (?<hints>\d+) hints?)?\. My first guess had a similarity of (?:(?:\d|\.|-)*\d). My first word in the top 1000 was at guess #(?:\d+)\. (?:My penultimate guess had a similarity of (?:(?:\d|\.|-)*\d)(?: \(\d+\/1000\))?\.)?/,
     regexTypes: {
       number: Number,
       score: Number,

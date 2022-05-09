@@ -49,10 +49,12 @@ export const RootStoreMutations = {
 export const RootStoreActions = {
   async fetchScoreboard(
     { dispatch, commit, state }: ActionContext<RootState, RootState>,
-    date: string
+    { date, forceRefresh }: { date: string; forceRefresh?: boolean }
   ) {
     const requestHelper = new RequestHelper<Score[]>();
-    const promise = requestHelper.start(api.scoreboard.fetchScoreboard(date));
+    const promise = requestHelper.start(
+      api.scoreboard.fetchScoreboard(date, forceRefresh)
+    );
     commit('setScoreboardCallStatus', requestHelper.status);
     const response = await promise;
     commit('setScoreboardCallStatus', requestHelper.status);
@@ -67,9 +69,9 @@ export const RootStoreActions = {
     { state, dispatch, commit, getters }: ActionContext<RootState, RootState>,
     offset: number
   ) {
-    const today = dayjs().startOf('day');
+    const today = dayjs.utc().startOf('day');
     const date = state.selectedDate
-      ? dayjs(state.selectedDate, 'YYYY-MM-DD').startOf('day')
+      ? dayjs.utc(state.selectedDate, 'YYYY-MM-DD').startOf('day')
       : today.clone();
     const offsetDate = date.clone().add(offset, 'days');
 
@@ -79,7 +81,7 @@ export const RootStoreActions = {
     ) {
       const dateStr = offsetDate.format('YYYY-MM-DD');
       if (!state.scoreboard[dateStr]) {
-        await dispatch('fetchScoreboard', dateStr);
+        await dispatch('fetchScoreboard', { date: dateStr });
       }
       commit('setDate', dateStr);
     }
@@ -129,9 +131,9 @@ export const RootStoreGetters = {
     return getters.games.indexOf(state.selectedGame);
   },
   dateEdges(state: RootState) {
-    const today = dayjs().startOf('day');
+    const today = dayjs.utc().startOf('day');
     const date = state.selectedDate
-      ? dayjs(state.selectedDate, 'YYYY-MM-DD').startOf('day')
+      ? dayjs.utc(state.selectedDate, 'YYYY-MM-DD').startOf('day')
       : today.clone();
     const earliest = today.clone().subtract(MAX_PAST_DAYS, 'days');
 
