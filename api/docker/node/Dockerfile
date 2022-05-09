@@ -32,6 +32,8 @@ FROM node:14-alpine
 
 WORKDIR /home/node/app
 
+COPY --from=builder /home/node/app/package.json ./
+
 COPY --from=builder /home/node/app/dist ./dist
 
 COPY --from=builder /home/node/app/node_modules ./node_modules
