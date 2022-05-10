@@ -14,6 +14,12 @@ jobs:
         id: tag
       - name: Set env
         run: echo "RELEASE_VERSION=${{steps.tag.outputs.tag}}" | sed 's/release\/ui-//g' >> $GITHUB_ENV
+      - name: Login to registry.docker.bland.work
+        uses: docker/login-action@v2
+        with:
+          registry: registry.docker.bland.work:443
+          username: ${{ secrets.DOCKER_REGISTRY_USERNAME }}
+          password: ${{ secrets.DOCKER_REGISTRY_PASSWORD }}
       - name: Build and push Docker images
         uses: docker/build-push-action@v3.0.0
         with:
