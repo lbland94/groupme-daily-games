@@ -26,6 +26,8 @@ jobs:
           context: ./ui
           file: ./ui/docker/node/Dockerfile
           push: true
+          from-cache: type=gha
+          to-cache: type=gha
           tags: |
             registry.docker.bland.work:443/daily-games-ui:${{ env.RELEASE_VERSION }}
             registry.docker.bland.work:443/daily-games-ui:latest

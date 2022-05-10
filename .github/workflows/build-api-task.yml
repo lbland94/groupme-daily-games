@@ -26,6 +26,8 @@ jobs:
           context: ./api
           file: ./api/docker/node/Dockerfile
           push: true
+          from-cache: type=gha
+          to-cache: type=gha
           tags: |
             registry.docker.bland.work:443/daily-games-api:${{ env.RELEASE_VERSION }}
             registry.docker.bland.work:443/daily-games-api:latest
