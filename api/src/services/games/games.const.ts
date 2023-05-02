@@ -114,4 +114,33 @@ export const GAMES = [
     url: 'https://semantle.com',
     utcResetOffset: 0,
   },
+  {
+    name: 'digits',
+    regex:
+      /Digits #(?<number>\d+) \((?<score>\d+)\/15⭐\)\n(?<operator_count>(?:\d+) \((?:\d+)\) +?(?:(?:✖|➕|➖|➗){1,6})\n(?:\d+) \((?:\d+)\) +?(?:(?:✖|➕|➖|➗){1,6})\n(?:\d+) \((?:\d+)\) +?(?:(?:✖|➕|➖|➗){1,6})\n(?:\d+) \((?:\d+)\) +?(?:(?:✖|➕|➖|➗){1,6})\n(?:\d+) \((?:\d+)\) +?(?:(?:✖|➕|➖|➗){1,6}))/,
+    regexTypes: {
+      number: Number,
+      score: Number,
+      operator_count: (value: string) => {
+        const match =
+          /(?<reached_1>\d+) \((?<target_1>\d+)\) +?(?<operators_1>(?:✖|➕|➖|➗){1,6})\n(?<reached_2>\d+) \((?<target_2>\d+)\) +?(?<operators_2>(?:✖|➕|➖|➗){1,6})\n(?<reached_3>\d+) \((?<target_3>\d+)\) +?(?<operators_3>(?:✖|➕|➖|➗){1,6})\n(?<reached_4>\d+) \((?<target_4>\d+)\) +?(?<operators_4>(?:✖|➕|➖|➗){1,6})\n(?<reached_5>\d+) \((?<target_5>\d+)\) +?(?<operators_5>(?:✖|➕|➖|➗){1,6})/.exec(
+            value,
+          );
+        const op_count = ['operators_1', 'operators_2', 'operators_3', 'operators_4', 'operators_5'].reduce(
+          (total, op_key) => total + (match.groups[op_key]?.length || 0),
+          0,
+        );
+        return op_count;
+      },
+    },
+    example:
+      'Digits #22 (15/15⭐)\n\
+61 (61)   ✖✖➕➖\n\
+106 (106) ✖➕➕\n\
+229 (229) ✖➕\n\
+356 (356) ✖➕➕✖\n\
+435 (435) ✖✖➖',
+    url: 'https://www.nytimes.com/games/digits',
+    utcResetOffset: 0,
+  },
 ];
