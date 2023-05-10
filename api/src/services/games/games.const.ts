@@ -141,6 +141,6 @@ export const GAMES = [
 356 (356) ✖➕➕✖\n\
 435 (435) ✖✖➖',
     url: 'https://www.nytimes.com/games/digits',
-    utcResetOffset: 0,
+    utcResetOffset: dayjs().tz(DEF_TZ, true).utcOffset(),
   },
 ];
