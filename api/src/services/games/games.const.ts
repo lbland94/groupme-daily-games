@@ -123,7 +123,7 @@ export const GAMES = [
       score: Number,
       operator_count: (value: string) => {
         const match =
-          /(?<reached_1>\d+) \((?<target_1>\d+)\) +?(?<operators_1>(?:✖|➕|➖|➗){1,6})\n(?<reached_2>\d+) \((?<target_2>\d+)\) +?(?<operators_2>(?:✖|➕|➖|➗){1,6})\n(?<reached_3>\d+) \((?<target_3>\d+)\) +?(?<operators_3>(?:✖|➕|➖|➗){1,6})\n(?<reached_4>\d+) \((?<target_4>\d+)\) +?(?<operators_4>(?:✖|➕|➖|➗){1,6})\n(?<reached_5>\d+) \((?<target_5>\d+)\) +?(?<operators_5>(?:✖|➕|➖|➗){1,6})/.exec(
+          /(?<reached_1>\d+) +\((?<target_1>\d+)\) +?(?<operators_1>(?:✖|➕|➖|➗){1,6})\n(?<reached_2>\d+) \((?<target_2>\d+)\) +?(?<operators_2>(?:✖|➕|➖|➗){1,6})\n(?<reached_3>\d+) \((?<target_3>\d+)\) +?(?<operators_3>(?:✖|➕|➖|➗){1,6})\n(?<reached_4>\d+) \((?<target_4>\d+)\) +?(?<operators_4>(?:✖|➕|➖|➗){1,6})\n(?<reached_5>\d+) \((?<target_5>\d+)\) +?(?<operators_5>(?:✖|➕|➖|➗){1,6})/.exec(
             value,
           );
         const op_count = ['operators_1', 'operators_2', 'operators_3', 'operators_4', 'operators_5'].reduce(
