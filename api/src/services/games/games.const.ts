@@ -152,9 +152,9 @@ export const GAMES = [
       emoji: String,
     },
     additionalProps: {
-      score: ({ emoji }: { emoji: string }) => ({
+      score: ({ emoji }: { emoji: string }) => {
         return emoji.split('\n').length;
-      }),
+      },
     },
     example: `Connections 
 Puzzle #233
