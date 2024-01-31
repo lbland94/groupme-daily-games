@@ -146,7 +146,7 @@ export const GAMES = [
     {
     name: 'Connections',
     regex:
-      /Connections\nPuzzle #(?<number>\d+)\n(?<emoji>(?:(?:🟩|🟦|🟨|🟪){4})\n?){4,8})/,
+      /Connections(?:\s+)?\nPuzzle #(?<number>\d+)\n(?<emoji>(?:(?:(?:🟩|🟦|🟨|🟪){4})\n?){4,8})/,
     regexTypes: {
       number: Number,
       emoji: String,
