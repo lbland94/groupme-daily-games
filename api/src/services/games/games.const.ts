@@ -143,4 +143,26 @@ export const GAMES = [
     url: 'https://www.nytimes.com/games/digits',
     utcResetOffset: dayjs().tz(DEF_TZ, true).utcOffset(),
   },
+    {
+    name: 'Connections',
+    regex:
+      /Connections\nPuzzle #(?<number>\d+)\n(?<emoji>(?:(?:🟩|🟦|🟨|🟪){4})\n?){4,8})/,
+    regexTypes: {
+      number: Number,
+      emoji: String,
+    },
+    additionalProps: {
+      score: ({ emoji }: { emoji: string }) => ({
+        return emoji.split('\n').length;
+      }),
+    },
+    example: `Connections 
+Puzzle #233
+🟨🟨🟨🟨
+🟩🟩🟩🟩
+🟦🟦🟦🟦
+🟪🟪🟪🟪`,
+    url: 'https://www.nytimes.com/games/connections',
+    utcResetOffset: dayjs().tz(DEF_TZ, true).utcOffset(),
+  },
 ];
