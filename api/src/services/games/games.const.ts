@@ -153,6 +153,11 @@ export const GAMES = [
     },
     additionalProps: {
       score: ({ emoji }: { emoji: string }) => {
+        const guesses = emoji.split('\n');
+        const successRegex = /🟨{4}|🟩{4}|🟦{4}|🟪{4}/;
+        return guesses.filter((guess) => successRegex.test(guess)).length;
+      },
+      guesses: ({ emoji }: { emoji: string }) => {
         return emoji.split('\n').length;
       },
     },
