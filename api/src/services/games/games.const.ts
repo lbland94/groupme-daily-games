@@ -153,12 +153,21 @@ export const GAMES = [
     },
     additionalProps: {
       score: ({ emoji }: { emoji: string }) => {
-        const guesses = emoji.split('\n');
+        const guesses = emoji.trim().split('\n');
         const successRegex = /(?:🟨){4}|(?:🟩){4}|(?:🟦){4}|(?:🟪){4}/;
-        return guesses.filter((guess) => successRegex.test(guess)).length;
+        const correctWords = guesses.filter((guess) => successRegex.test(guess)).length;
+        const misses = guesses.length - correctWords;
+        return misses * (5 - correctWords) + correctWords;
+      },
+      complete: ({ emoji }: { emoji: string}) => {
+        const guesses = emoji.trim().split('\n');
+        const successRegex = /(?:🟨){4}|(?:🟩){4}|(?:🟦){4}|(?:🟪){4}/;
+        const complete = guesses.filter((guess) => successRegex.test(guess)).length === 4;
+        const gc = guesses.length;
+        return `${complete ? gc === 4 ? '🇺🇸' : '✅' : '❎'}`;
       },
       guesses: ({ emoji }: { emoji: string }) => {
-        return emoji.split('\n').length;
+        return emoji.trim().split('\n').length;
       },
     },
     example: `Connections 
