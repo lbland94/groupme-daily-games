@@ -16,8 +16,7 @@
   "author": "Landon Bland",
   "license": "MIT",
   "dependencies": {
-    "@types/lodash": "^4.14.165",
-    "bcrypt": "^3.0.0",
+    "bcrypt": "^5.1.1",
     "body-parser": "^1.18.3",
     "class-validator": "^0.12.2",
     "connect": "^3.7.0",
@@ -51,6 +50,7 @@
     "@types/express": "^4.16.0",
     "@types/helmet": "^4.0.0",
     "@types/jwt-then": "^1.0.0",
+    "@types/lodash": "^4.14.165",
     "@types/mongoose": "^5.10.1",
     "@types/morgan": "^1.9.2",
     "@types/multer": "^1.4.4",
