@@ -45,8 +45,8 @@ function transformScoreInfo(info: Score['info']) {
         }
         break;
       case 'time': {
-        const d = dayjs.duration({ milliseconds: info[tKey] });
-        obj[tKey] = { value: `${d.asSeconds()}s`, sortVal: d.asMilliseconds() };
+        const d = dayjs.duration(info[tKey]);
+        obj[tKey] = { value: d.format('m[m] s[s]'), sortVal: d.asMilliseconds() };
         break;
       }
       case 'hardMode':

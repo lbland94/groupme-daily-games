@@ -16,7 +16,7 @@
         'text-right': i === headers.length - 1,
       }"
     >
-      {{ header }}
+      {{ formatHeader(header) }}
     </div>
     <template v-for="(r, i) in sortedContent" :key="`row_${i}`">
       <div
@@ -111,6 +111,14 @@ export default defineComponent({
     },
   },
   methods: {
+    formatHeader(fieldName: string) {
+      return fieldName
+        .replace(/_/g, ' ')
+        .replace(/[A-Z]/g, (match) => {
+          return ` ${match.toLowerCase()}`;
+        })
+        .trim();
+    },
     sort(fieldName: string) {
       if (this.excludedFields.includes(fieldName)) return;
 
@@ -141,12 +149,10 @@ export default defineComponent({
   width: 100%;
   display: grid;
   justify-content: space-between;
+  gap: 4px;
 
   .gdg-t-head {
     cursor: pointer;
-  }
-
-  .gdg-t-head {
     margin-bottom: 1rem;
     border-bottom: 1px solid var(--gdg-color-white--darken-10);
     text-align: center;

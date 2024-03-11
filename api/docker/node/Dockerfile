@@ -1,4 +1,4 @@
-FROM node:14-alpine AS builder
+FROM node:18-alpine AS builder
 
 RUN mkdir -p /home/node/app/node_modules && chown -R node:node /home/node/app
 
@@ -28,7 +28,7 @@ RUN npm prune --production
 
 RUN /usr/local/bin/node-prune
 
-FROM node:14-alpine
+FROM node:18-alpine
 
 WORKDIR /home/node/app
 

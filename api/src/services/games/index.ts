@@ -1,6 +1,7 @@
 import dayjs, { DEF_TZ } from '@/utilities/dayjs';
 import { GAMES } from './games.const';
 import { Score } from './games.interface';
+import omit from 'lodash/omit';
 
 function applyAdditionalProps(addProps: Record<string, (...args: any[]) => string | number | boolean>, data: any) {
   const output: Record<string, string | number | boolean> = {};
@@ -44,10 +45,13 @@ export class GamesService {
           const data = applyTypes(match, game.regexTypes);
           scores.push({
             game: game.name,
-            info: {
-              ...data,
-              ...applyAdditionalProps(game.additionalProps, data),
-            },
+            info: omit(
+              {
+                ...data,
+                ...applyAdditionalProps(game.additionalProps, data),
+              },
+              ...(game.suppress || []),
+            ),
             source: input.msg,
             user: input.user,
             timestamp: input.timestamp,

@@ -1,4 +1,5 @@
 import dayjs, { DEF_TZ } from '@/utilities/dayjs';
+import { segmenter } from '@/utilities/segmenter';
 
 export const GAMES = [
   {
@@ -143,10 +144,9 @@ export const GAMES = [
     url: 'https://www.nytimes.com/games/digits',
     utcResetOffset: dayjs().tz(DEF_TZ, true).utcOffset(),
   },
-    {
+  {
     name: 'Connections',
-    regex:
-      /Connections(?:\s+)?\nPuzzle #(?<number>\d+)\n(?<emoji>(?:(?:(?:🟩|🟦|🟨|🟪){4})\n?){4,8})/,
+    regex: /Connections(?:\s+)?\nPuzzle #(?<number>\d+)\n(?<emoji>(?:(?:(?:🟩|🟦|🟨|🟪){4})\n?){4,8})/,
     regexTypes: {
       number: Number,
       emoji: String,
@@ -159,12 +159,12 @@ export const GAMES = [
         const misses = guesses.length - correctWords;
         return misses * (5 - correctWords) + correctWords;
       },
-      complete: ({ emoji }: { emoji: string}) => {
+      complete: ({ emoji }: { emoji: string }) => {
         const guesses = emoji.trim().split('\n');
         const successRegex = /(?:🟨){4}|(?:🟩){4}|(?:🟦){4}|(?:🟪){4}/;
         const complete = guesses.filter((guess) => successRegex.test(guess)).length === 4;
         const gc = guesses.length;
-        return `${complete ? gc === 4 ? '🇺🇸' : '✅' : '❎'}`;
+        return `${complete ? (gc === 4 ? '🇺🇸' : '✅') : '❎'}`;
       },
       guesses: ({ emoji }: { emoji: string }) => {
         return emoji.trim().split('\n').length;
@@ -178,5 +178,57 @@ Puzzle #233
 🟪🟪🟪🟪`,
     url: 'https://www.nytimes.com/games/connections',
     utcResetOffset: dayjs().tz(DEF_TZ, true).utcOffset(),
+  },
+  {
+    name: 'Strands',
+    regex: /Strands\s#(?<number>\d+)\n“.*?”\n(?<emoji>(?:(?:🔵|🟡|💡){1,4}\n?)+)/,
+    regexTypes: {
+      number: Number,
+      emoji: String,
+    },
+    additionalProps: {
+      guesses: ({ emoji }: { emoji: string }) => {
+        return [...segmenter.segment(emoji.replace(/\n/g, '').trim())].length;
+      },
+      hints: ({ emoji }: { emoji: string }) => {
+        return emoji.match(/💡/g)?.length || 0;
+      },
+      spangramGuess: ({ emoji }: { emoji: string }) => {
+        const segments = [...segmenter.segment(emoji.replace(/\n/g, '').trim())];
+        const index = segments.findIndex((seg) => seg.segment === '🟡');
+        return index > -1 ? index + 1 : index;
+      },
+    },
+    example: `Strands #4
+“Don’t do it!”
+🔵🔵🔵🔵
+🔵🔵💡🔵
+💡🟡`,
+    url: 'https://www.nytimes.com/games/strands',
+    utcResetOffset: dayjs().tz(DEF_TZ, true).utcOffset(),
+  },
+  {
+    name: 'The Mini',
+    regex:
+      /(?:https:\/\/www\.nytimes\.com\/badges\/games\/mini\.html\?d=(?<date>(?:\d|-)+)&t=(?<time>\d+)|I solved the (?<date_2>(?:\d|\/)+) New York Times Mini Crossword in (?<time_2>(?:\d|:)+)!)/,
+    regexTypes: {
+      date: (val: string | undefined) => (!val ? val : String(val)),
+      date_2: (val: string | undefined) => (!val ? val : String(val)),
+      time: (val: string | undefined) => (!val ? val : Number(val)),
+      time_2: (val: string | undefined) => (!val ? val : String(val)),
+    },
+    suppress: ['time_2', 'date_2'],
+    additionalProps: {
+      date: ({ date, date_2 }: { date: string; date_2: string }) => {
+        return date || date_2;
+      },
+      time: ({ time, time_2 }: { time: number; time_2: string }) => {
+        return !isNaN(time)
+          ? time * 1000
+          : dayjs
+              .duration({ minutes: +time_2.split(':')[0], seconds: +time_2.split(':')?.[1] || +time_2 })
+              .asSeconds() * 1000;
+      },
+    },
   },
 ];

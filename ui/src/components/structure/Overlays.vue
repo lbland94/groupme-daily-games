@@ -14,7 +14,7 @@
         :key="modal.id"
         :data="modal"
         @close="closeOverlay"
-        v-on="modal.modalListeners"
+        v-on="modal.modalListeners || {}"
       />
     </TransitionGroup>
     <TransitionGroup name="drawer-slide" :duration="200">
