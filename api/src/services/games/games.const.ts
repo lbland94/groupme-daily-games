@@ -5,7 +5,7 @@ export const GAMES = [
   {
     name: 'Wordle',
     regex:
-      /Wordle (?<number>\d+) (?<score>\d|X)\/6(?<hardMode>\*)?\n?\n(?<emoji>(?:(?:(?:🟩|⬜|🟨|⬛){5})\n){0,5}(?:(?:🟩|⬜|🟨|⬛){5}))/,
+      /Wordle (?<number>(?:\d|,)+) (?<score>\d|X)\/6(?<hardMode>\*)?\n?\n(?<emoji>(?:(?:(?:🟩|⬜|🟨|⬛){5})\n){0,5}(?:(?:🟩|⬜|🟨|⬛){5}))/,
     regexTypes: {
       number: Number,
       score: (score: string) => {
