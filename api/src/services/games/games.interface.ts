@@ -4,4 +4,5 @@ export interface Score {
   info: Record<string, string | number | boolean>;
   user: string;
   timestamp: number;
+  date?: string;
 }

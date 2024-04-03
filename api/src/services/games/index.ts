@@ -43,18 +43,29 @@ export class GamesService {
             if (min.unix() > input.timestamp || max.unix() < input.timestamp) continue;
           }
           const data = applyTypes(match, game.regexTypes);
+          const info = omit(
+            {
+              ...data,
+              ...applyAdditionalProps(game.additionalProps, data),
+            },
+            ...(game.suppress || []),
+          );
+          let date: dayjs.Dayjs | undefined;
+          const dateMethod = game.date;
+          if (typeof dateMethod === 'function') {
+            date = dateMethod(info);
+          }
+          if (date && !date.isSame(day, 'day')) {
+            continue;
+          }
+          const formattedDate = date.format('MMMM D, YYYY');
           scores.push({
             game: game.name,
-            info: omit(
-              {
-                ...data,
-                ...applyAdditionalProps(game.additionalProps, data),
-              },
-              ...(game.suppress || []),
-            ),
+            info,
             source: input.msg,
             user: input.user,
             timestamp: input.timestamp,
+            date: formattedDate,
           });
         }
       }
@@ -85,8 +96,14 @@ export class GamesService {
     return GAMES.map((g) => {
       const utcDate = date.isUTC() ? date.clone() : date.clone().add(date.utcOffset(), 'minutes');
       return {
-        min: utcDate.clone().subtract(g.utcResetOffset, 'minutes'),
-        max: utcDate.clone().subtract(g.utcResetOffset, 'minutes').add(1, 'days'),
+        min: utcDate
+          .clone()
+          .subtract(g.utcResetOffset, 'minutes')
+          .subtract(g.date ? 1 : 0, 'days'),
+        max: utcDate
+          .clone()
+          .subtract(g.utcResetOffset, 'minutes')
+          .add(g.date ? 2 : 1, 'days'),
       };
     });
   }

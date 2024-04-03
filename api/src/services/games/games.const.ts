@@ -7,7 +7,7 @@ export const GAMES = [
     regex:
       /Wordle (?<number>(?:\d|,)+) (?<score>\d|X)\/6(?<hardMode>\*)?\n?\n(?<emoji>(?:(?:(?:🟩|⬜|🟨|⬛){5})\n){0,5}(?:(?:🟩|⬜|🟨|⬛){5}))/,
     regexTypes: {
-      number: Number,
+      number: (value: string) => Number(value.replace(/[^0-9]/g, '')),
       score: (score: string) => {
         const numberScore = Number(score);
         if (!isNaN(numberScore)) {
@@ -21,12 +21,18 @@ export const GAMES = [
     example: 'Wordle 317 3/6\n\n🟩🟩⬜🟩⬜\n🟩🟩🟩🟩⬜\n🟩🟩🟩🟩🟩',
     url: 'https://www.nytimes.com/games/wordle/index.html',
     utcResetOffset: dayjs().tz(DEF_TZ, true).utcOffset(),
+    date: (args: any) => {
+      const startDate = dayjs('2021-06-19');
+      const currentDate = startDate.add(args.number, 'days');
+      return currentDate;
+    },
   },
   {
     name: 'octordle',
-    regex: /Daily Octordle #(?<number>\d+)\n\n?(?<emoji>(?:(?:0️⃣|1️⃣|2️⃣|3️⃣|4️⃣|5️⃣|6️⃣|7️⃣|8️⃣|9️⃣|🔟|🕚|🕛|🕐|🟥)\n?){8})/,
+    regex:
+      /Daily Octordle #(?<number>(?:\d|,)+)\n\n?(?<emoji>(?:(?:0️⃣|1️⃣|2️⃣|3️⃣|4️⃣|5️⃣|6️⃣|7️⃣|8️⃣|9️⃣|🔟|🕚|🕛|🕐|🟥)\n?){8})/,
     regexTypes: {
-      number: Number,
+      number: (value: string) => Number(value.replace(/[^0-9]/g, '')),
       emoji: String,
     },
     additionalProps: {
@@ -44,12 +50,21 @@ export const GAMES = [
     example: 'Daily Octordle #99\n🔟6️⃣\n🕛7️⃣\n9️⃣🕚\n8️⃣🕐',
     url: 'https://octordle.com/',
     utcResetOffset: dayjs().tz(DEF_TZ, true).utcOffset(),
+    date: (args: any) => {
+      const startDate = dayjs('2021-06-20');
+      const currentDate = startDate.add(args.number, 'days');
+      return currentDate;
+    },
+    title: (args: any) => {
+      return `Wordle #${args.number} (${args.date})`;
+    },
   },
   {
     name: 'nerdlegame',
-    regex: /nerdlegame (?<number>\d+) (?<score>\d)\/6\n?\n(?<emoji>(?:(?:(?:🟩|🟪|⬛){8})\n){0,5}(?:(?:🟩|🟪|⬛){8}))/,
+    regex:
+      /nerdlegame (?<number>(?:\d|,)+) (?<score>\d)\/6\n?\n(?<emoji>(?:(?:(?:🟩|🟪|⬛){8})\n){0,5}(?:(?:🟩|🟪|⬛){8}))/,
     regexTypes: {
-      number: Number,
+      number: (value: string) => Number(value.replace(/[^0-9]/g, '')),
       score: Number,
       emoji: String,
     },
@@ -60,10 +75,10 @@ export const GAMES = [
   {
     name: 'mini nerdlegame',
     regex:
-      /mini nerdlegame (?<number>\d+) (?<score>\d)\/6\n?\n(?<emoji>(?:(?:(?:🟩|🟪|⬛){6})\n){0,5}(?:(?:🟩|🟪|⬛){6}))/,
+      /mini nerdlegame (?<number>(?:\d|,)+) (?<score>\d)\/6\n?\n(?<emoji>(?:(?:(?:🟩|🟪|⬛){6})\n){0,5}(?:(?:🟩|🟪|⬛){6}))/,
     example: 'mini nerdlegame 104 3/6\n\n🟪⬛⬛⬛🟪🟩\n⬛⬛⬛🟩⬛🟩\n🟩🟩🟩🟩🟩🟩',
     regexTypes: {
-      number: Number,
+      number: (value: string) => Number(value.replace(/[^0-9]/g, '')),
       score: Number,
       emoji: String,
     },
@@ -72,9 +87,9 @@ export const GAMES = [
   },
   {
     name: 'instant nerdle',
-    regex: /(?:(?:🟩|🟪|⬛️) ?){3}Instant Nerdle (?<number>\d+) solved in (?<time>\d+m (?:\d+s)?)!/,
+    regex: /(?:(?:🟩|🟪|⬛️) ?){3}Instant Nerdle (?<number>(?:\d|,)+) solved in (?<time>\d+m (?:\d+s)?)!/,
     regexTypes: {
-      number: Number,
+      number: (value: string) => Number(value.replace(/[^0-9]/g, '')),
       time: (t: string) => {
         const match = /(?<minutes>\d+)m (?<seconds>\d+)s/.exec(t);
         return dayjs
@@ -104,9 +119,9 @@ export const GAMES = [
   {
     name: 'semantle',
     regex:
-      /I solved Semantle #(?<number>\d+) in (?<score>\d+) guesses(?: with (?<hints>\d+) hints?)?\. My first guess had a similarity of (?:(?:\d|\.|-)*\d). My first word in the top 1000 was at guess #(?:\d+)\. (?:My penultimate guess had a similarity of (?:(?:\d|\.|-)*\d)(?: \(\d+\/1000\))?\.)?/,
+      /I solved Semantle #(?<number>(?:\d|,)+) in (?<score>\d+) guesses(?: with (?<hints>\d+) hints?)?\. My first guess had a similarity of (?:(?:\d|\.|-)*\d). My first word in the top 1000 was at guess #(?:\d+)\. (?:My penultimate guess had a similarity of (?:(?:\d|\.|-)*\d)(?: \(\d+\/1000\))?\.)?/,
     regexTypes: {
-      number: Number,
+      number: (value: string) => Number(value.replace(/[^0-9]/g, '')),
       score: Number,
       hints: Number,
     },
@@ -118,9 +133,9 @@ export const GAMES = [
   {
     name: 'digits',
     regex:
-      /Digits #(?<number>\d+) \((?<score>\d+)\/15⭐\)\n(?<operator_count>(?:(?:\d+) +\((?:\d+)\) +?(?:(?:✖|➕|➖|➗){1,6})\n?){5})/,
+      /Digits #(?<number>(?:\d|,)+) \((?<score>\d+)\/15⭐\)\n(?<operator_count>(?:(?:\d+) +\((?:\d+)\) +?(?:(?:✖|➕|➖|➗){1,6})\n?){5})/,
     regexTypes: {
-      number: Number,
+      number: (value: string) => Number(value.replace(/[^0-9]/g, '')),
       score: Number,
       operator_count: (value: string) => {
         const match =
@@ -143,12 +158,20 @@ export const GAMES = [
 435 (435) ✖✖➖',
     url: 'https://www.nytimes.com/games/digits',
     utcResetOffset: dayjs().tz(DEF_TZ, true).utcOffset(),
+    date: (args: any) => {
+      const startDate = dayjs('2023-04-09');
+      const currentDate = startDate.add(args.number, 'days');
+      return currentDate;
+    },
+    title: (args: any) => {
+      return `Digits #${args.number} (${args.date})`;
+    },
   },
   {
     name: 'Connections',
-    regex: /Connections(?:\s+)?\nPuzzle #(?<number>\d+)\n(?<emoji>(?:(?:(?:🟩|🟦|🟨|🟪){4})\n?){4,8})/,
+    regex: /Connections(?:\s+)?\nPuzzle #(?<number>(?:\d|,)+)\n(?<emoji>(?:(?:(?:🟩|🟦|🟨|🟪){4})\n?){4,8})/,
     regexTypes: {
-      number: Number,
+      number: (value: string) => Number(value.replace(/[^0-9]/g, '')),
       emoji: String,
     },
     additionalProps: {
@@ -178,12 +201,21 @@ Puzzle #233
 🟪🟪🟪🟪`,
     url: 'https://www.nytimes.com/games/connections',
     utcResetOffset: dayjs().tz(DEF_TZ, true).utcOffset(),
+    date: (args: any) => {
+      const startDate = dayjs('2023-06-11');
+      const currentDate = startDate.add(args.number, 'days');
+      return currentDate;
+    },
+
+    title: (args: any) => {
+      return `Connections #${args.number} (${args.date})`;
+    },
   },
   {
     name: 'Strands',
-    regex: /Strands\s#(?<number>\d+)\n“.*?”\n(?<emoji>(?:(?:🔵|🟡|💡){1,4}\n?)+)/,
+    regex: /Strands\s#(?<number>(?:\d|,)+)\n“.*?”\n(?<emoji>(?:(?:🔵|🟡|💡){1,4}\n?)+)/,
     regexTypes: {
-      number: Number,
+      number: (value: string) => Number(value.replace(/[^0-9]/g, '')),
       emoji: String,
     },
     additionalProps: {
@@ -206,6 +238,14 @@ Puzzle #233
 💡🟡`,
     url: 'https://www.nytimes.com/games/strands',
     utcResetOffset: dayjs().tz(DEF_TZ, true).utcOffset(),
+    date: (args: any) => {
+      const startDate = dayjs('2024-03-03');
+      const currentDate = startDate.add(args.number, 'days');
+      return currentDate;
+    },
+    title: (args: any) => {
+      return `Strands #${args.number} (${args.date})`;
+    },
   },
   {
     name: 'The Mini',
@@ -229,6 +269,16 @@ Puzzle #233
               .duration({ minutes: +time_2.split(':')[0], seconds: +time_2.split(':')?.[1] || +time_2 })
               .asSeconds() * 1000;
       },
+    },
+    utcResetOffset: dayjs().tz('America/New_York', true).utcOffset() + 120,
+    date: (args: any) => {
+      if (args.date_2) {
+        return dayjs(args.date_2, 'M/DD/YYYY');
+      }
+      return dayjs(args.date);
+    },
+    title: (args: any) => {
+      return `${args.date} Mini`;
     },
   },
 ];
